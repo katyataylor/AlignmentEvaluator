@@ -16,17 +16,42 @@
         Use this information wisely.
     </p>
 
-    <!-- X-Axis (Lawful - Chaotic) -->
-    <div class="quiz-container">
-        <h3 class="question-text">Question will appear here</h2>
-        <input type="range" class="x-slider" min="0" max="10" step="0.1" value="5">
+    <div class="quiz-dashboard">
+
+        <!-- X-Axis Questions (Id vs Superego) -->
+
+        <!-- Dilemma 1: Measures instinct reliance -->
+        <div class="question-box">
+            <p>When facing a crisis, do you rely on protocols or go with your gut?</p>
+            <input type="range" class="x-slider-1" min="0" max="10" step="0.1" value="5">
+            <span class="label">0 = Protocol | 10 = Instinct</span>
+        </div>
+
+        <!-- Dilemma 2: Measures self-discipline -->
+        <div class="question-box">
+            <p>If a rule makes no sense to you, do you follow it anyway?</p>
+            <input type="range" class="x-slider-2" min="0" max="10" step="0.1" value="5">
+            <span class="label">0 = Always Follow | 10 = Completely Ignore</span>
+        </div>
+
+        <!-- Y-Axis Questions (Benefit vs Harm) -->
+
+        <!-- Dilemma 3: Benefit to self temptation -->
+        <div class="question-box">
+            <p>You find a lost wallet. What do you do?</p>
+            <input type="range" class="y-slider-1" min="0" max="10" step="0.1" value="5">
+            <span class="label">0 = Return Immediately | 10 = Keep for Self</span>
+        </div>
+
+        <!-- Dilemma 4: Measures social disagreeability -->
+        <div class="question-box">
+            <p>How likely are you to prioritize your own comfort if it causes inconvenience to others?</p>
+            <input type="range" class="y-slider-2" min="0" max="10" step="0.1" value="5">
+            <span class="label">0 = Unlikely | 10 = Extremely likely</span>
+        </div>
+
     </div>
 
-    <!-- Y-Axis (Good - Evil) -->
-     <div class="quiz-container">
-        <h3 class="question-text">Question will appear here</h2>
-        <input type="range" class="y-slider" min="0" max="10" step="0.1" value="5">
-    </div>
 
     <div class="grid">
         <!-- The Alignment Boxes -->
