@@ -60,6 +60,9 @@ window.addEventListener(`DOMContentLoaded`, () => {
 
     // 6. REVEAL THE DOT! 
     playerDot.style.display = "block";
+
+    // 7. NEW: Calculate alignment text and reveal description box
+    showAlignmentDescription(xPercentage, yPercentage);
   };
 
   // Listen for the button click to run the math and show the dot
@@ -67,5 +70,62 @@ window.addEventListener(`DOMContentLoaded`, () => {
 
   // Run initial setup on page load
   toggle();
+  // Hide description container when switching quiz modes
+  document.getElementById("result-container").style.display = "none";
+
+    // Database of descriptions mapped directly to alignment keys
+    const alignmentDescriptions = {
+        "Lawful Good": "Your instincts are kept in check by a strong internal compass, and your actions consistently benefit those around you. You play by the rules and they happen to be the right rules.",
+        "Neutral Good": "You do what's right without being rigid about how — structure and impulse balance out, but your impact on others stays positive. Flexible in method, consistent in outcome.",
+        "Chaotic Good": "Your gut calls the shots, but it usually points you toward helping others. You break rules when they get in the way of doing what's right.",
+        "Lawful Neutral": "Discipline and self-control define you, but you're not particularly driven by helping or harming others. You follow the system because that's what keeps things running.",
+        "True Neutral": "Instinct and discipline cancel each other out, and your net impact on others hovers near zero. You exist in balance not by ideology, but by nature.",
+        "Chaotic Neutral": "You act on impulse and answer to no one, but your actions don't trend toward helping or hurting others in any meaningful way. Freedom is the point and consequences are secondary.",
+        "Lawful Evil": "You're disciplined, controlled, and methodical, and you use all of it to serve yourself at others' expense. The rules are a tool, not a value.",
+        "Neutral Evil": "You're neither reckless nor principled. You just do what benefits you, regardless of who it hurts. No strong code, no strong impulse, just quiet self-interest.",
+        "Chaotic Evil": "You act on raw impulse with little regard for rules or the people around you. Harm to others isn't the goal, but it's rarely the obstacle either."
+    };
+
+    function showAlignmentDescription(xPct, yPct) {
+        let alignmentX = "";
+        let alignmentY = "";
+
+        // Determine X-Axis bucket (Law vs Chaos)
+        // 0 to 33.3% = Lawful, 33.3% to 66.6% = Neutral, 66.6% to 100% = Chaotic
+        if (xPct <= 33.33) {
+            alignmentX = "Lawful";
+        } else if (xPct <= 66.66) {
+            alignmentX = "Neutral";
+        } else {
+            alignmentX = "Chaotic";
+        }
+
+        // Determine Y-Axis bucket (Good vs Evil)
+        // Note: Top of grid (low percentage) is Good, bottom of grid (high percentage) is Evil
+        if (yPct <= 33.33) {
+            alignmentY = "Good";
+        } else if (yPct <= 66.66) {
+            alignmentY = "Neutral";
+        } else {
+            alignmentY = "Evil";
+        }
+
+        // Combine axes to create key (Handle special case for True Neutral)
+        let finalAlignmentKey = `${alignmentX} ${alignmentY}`;
+        if (finalAlignmentKey === "Neutral Neutral") {
+            finalAlignmentKey = "True Neutral";
+        }
+
+        // Target UI output containers
+        const resultContainer = document.getElementById("result-container");
+        const resultTitle = document.getElementById("result-title");
+        const resultText = document.getElementById("result-text");
+
+        // Inject text and slide open the result box
+        resultTitle.textContent = finalAlignmentKey;
+        resultText.textContent = alignmentDescriptions[finalAlignmentKey];
+        resultContainer.style.display = "block";
+    }
+
 });
 
