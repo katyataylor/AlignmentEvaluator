@@ -7,7 +7,7 @@ window.addEventListener(`DOMContentLoaded`, () => {
         // Prevent default click highlights or text selections during active dragging
         box.style.userSelect = 'none';
 
-        // 1. Listen for standard keyboard focus or direct slider clicks
+        // Listen for standard keyboard focus or direct slider clicks
         box.addEventListener('focusin', () => {
             box.classList.add('active-interaction');
         });
@@ -16,7 +16,7 @@ window.addEventListener(`DOMContentLoaded`, () => {
             box.classList.remove('active-interaction');
         });
 
-        // 2. Listen for mouse dragging states (handles your expanded hit-target dragging click rules)
+        // Listen for mouse dragging states (handles your expanded hit-target dragging click rules)
         box.addEventListener('mousedown', () => {
             box.classList.add('active-interaction');
             
