@@ -1,39 +1,91 @@
+/* Universal Resets - Keep this lean */
 * {
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    font-style: italic;
-    text-align: center;
-    flex: auto;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-.grid {
+/* Typography and Global Page Styles */
+body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    text-align: center;
+    background-color: #fafafa;
+    padding: 20px;
+    color: #222;
+}
 
-    position: relative;
+/* Make your descriptions italic instead of globalizing it */
+p, .label {
+    font-style: italic;
+    margin-bottom: 10px;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+/* Input & Toggle Styling */
+.button-container {
+    margin: 20px 0;
+}
+
+.question-box {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 15px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+.question-box input[type="range"] {
+    width: 80%;
+    margin: 10px 0;
+}
+
+.label {
+    display: block;
+    font-size: 0.9em;
+    color: #666;
+}
+
+/* Grid Layout Structure */
+.grid {
+    position: relative; /* CRITICAL: Anchors the absolute positioned dot inside the grid boundary */
     width: 600px;
     height: 600px;
-    border: 2px solid black;
-    margin: 24px;
-
-    /* Creates the 3x3 grid layout */
+    border: 3px solid black;
+    margin: 30px auto; /* Centers the actual grid container on the webpage */
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
-
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* The > symbol makes the code target only the boxes, not the dot. */
+/* Target alignment cell blocks */
 .box {
+    border: 1px solid black;
+    background-color: #fff;
+    /* Centers text both vertically and horizontally inside each box */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+    padding: 10px;
+}
 
-        border: 1px solid black;
-    }
-
+/* Floating Plot Point */
 .dot {
-
     position: absolute;
-    width: 10px;
-    height: 10px;
-    border-radius: 5px;
-    border-style: none;
-    background-color: red;
+    width: 14px; /* Bumped up slightly so it's easier to see against grid borders */
+    height: 14px;
+    border-radius: 50%;
+    background-color: goldenrod;
+    border: 2px solid white; /* Gives the dot an outline so it pops out */
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
     display: none;
-
+    /* CRITICAL: Offsets the dot coordinate alignment so the exact center of the circle sits on the plot point */
+    transform: translate(-50%, -50%);
+    transition: left 0.4s cubic-bezier(0.25, 1, 0.5, 1), top 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
