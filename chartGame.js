@@ -1,5 +1,9 @@
 window.addEventListener(`DOMContentLoaded`, () => {
 
+    // Radio toggle inputs 
+    const optionA = document.getElementById("personality");
+    const optionB = document.getElementById("action");
+    
     // Slider listeners
     const xSlider1 = document.querySelector(`.x-slider-1`);
     const xSlider2 = document.querySelector(`.x-slider-2`);
@@ -16,6 +20,33 @@ window.addEventListener(`DOMContentLoaded`, () => {
     const playerDot = document.querySelector(`.dot`);
     const xSlider = document.querySelector(`.x-slider`);
     const ySlider = document.querySelector(`.y-slider`);
+
+    // Target the Question Wrapper Divs instead of the radio buttons
+    const containerA = document.querySelector(".optionA");
+    const containerB = document.querySelector(".optionB");
+
+    // Get current value of radio button
+    function toggle() {
+
+        const selectedOption = document.querySelector(`input[name="eitherOrGroup"]:checked`).value;
+
+        if (selectedOption === "A") {
+            containerA.style.display = "block";
+            containerB.style.display = "none";
+        } else if (selectedOption === "B") {
+            containerA.style.display = "none";
+            containerB.style.display = "block";
+        }
+
+    }
+
+    // Event listeners so when the value changes, the behavior changes
+    containerA.addEventListener("change", toggle);
+    containerB.addEventListener("change", toggle);
+
+    // Run once on load to ensure correct initial state
+    toggle();
+    
 
     // Convert default scores into padded percentages for dot starting point
     let totalXPoints = idScore + superegoScore;
