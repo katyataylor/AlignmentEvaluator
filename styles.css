@@ -1,127 +1,259 @@
-/* Universal Resets - Keep this lean */
+/* ==========================================
+   1. GLOBAL RESETS & BASE VARIABLES
+   ========================================== */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-/* Typography and Global Page Styles */
 body {
     font-family: Georgia, 'Times New Roman', Times, serif;
     text-align: center;
     background-color: #fafafa;
-    padding: 20px;
-    color: #222;
-}
-
-/* Make your descriptions italic instead of globalizing it */
-p, .label {
-    font-style: italic;
-    margin-bottom: 10px;
+    padding: 40px 20px;
+    color: black;
 }
 
 h1 {
+    font-size: 2.2rem;
+    letter-spacing: 2px;
     margin-bottom: 20px;
 }
 
-/* Input & Toggle Styling */
-.button-container {
-    margin: 20px 0;
+p {
+    font-style: italic;
+    color: #333;
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto 20px auto;
 }
 
-/* Base styling for the question boxes */
-.question-box {
-    max-width: 500px;
-    margin: 24px auto;
-    padding: 20px;
-    background: transparent; /* Makes container transparent */
-    border: 2px solid black;  /* Sharp black border */
-    border-radius: 0;         /* No border radius */
+
+/* ==========================================
+   2. TOGGLE RADIO BUTTONS
+   ========================================== */
+.button-container {
+    margin: 40px 0;
+}
+
+.button-container p {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-style: normal;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+}
+
+/* Hide native circular radio inputs */
+.button-container input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* Custom flat button-labels */
+.button-container label {
+    display: inline-block;
+    padding: 12px 28px;
+    margin: 0 6px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 0.95rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    background-color: transparent;
+    color: black;
     
-    /* Smooth transition for the pop-up animation */
+    /* Cohesive sharp framing */
+    border: 2px solid black;
+    border-radius: 0; 
+    
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.button-container label:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Invert colors cleanly when checked */
+.button-container input[type="radio"]:checked + label {
+    background-color: black;
+    color: white;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.button-container input[type="radio"]:focus-visible + label {
+    outline: 2px dashed #666;
+    outline-offset: 4px;
+}
+
+
+/* ==========================================
+   3. QUESTION CONTAINERS & SLIDERS
+   ========================================== */
+.question-box {
+    max-width: 550px;
+    margin: 24px auto;
+    padding: 24px;
+    background: transparent;
+    border: 2px solid black;
+    border-radius: 0;
+    
     transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
     transform: translateY(0);
 }
 
-/* Interacting state: Triggers when the active class is applied via JS */
+.question-box p {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 1.05rem;
+    margin-bottom: 15px;
+}
+
+/* Pop-up effect on interaction */
 .question-box.active-interaction {
-    transform: translateY(-4px); /* Lifts the box up slightly */
-    
-    /* Adds a light shadow behind the solid black box border */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); 
-    
-    /* CRITICAL: Applies a cohesive shadow behind the text nodes and slider thumb inside the container */
-    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1)); 
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.08)); 
 }
 
-/* Clean up slider look to fit the sharp black aesthetic */
+/* Input slider styling track overrides */
 .question-box input[type="range"] {
-    width: 85%;
-    margin: 12px 0;
+    display: block;
+    width: 90%;
+    margin: 15px auto;
     cursor: pointer;
-    accent-color: black; /* Makes the slider thumb black to match the theme */
+    accent-color: black;
 }
-
 
 .label {
     display: block;
-    font-size: 0.9em;
-    color: #666;
+    font-style: italic;
+    font-size: 0.85em;
+    color: #555;
+    margin-bottom: 0;
 }
 
-/* Grid Layout Structure */
+
+/* ==========================================
+   4. SUBMIT QUIZ BUTTON
+   ========================================== */
+#submit-quiz-btn {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-weight: bold;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    padding: 14px 36px;
+    margin: 30px 0;
+    background-color: transparent;
+    color: black;
+    
+    /* Cohesive sharp framing */
+    border: 2px solid black;
+    border-radius: 0;
+    
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+}
+
+#submit-quiz-btn:hover {
+    background-color: black;
+    color: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+#submit-quiz-btn:active {
+    transform: scale(0.98);
+}
+
+
+/* ==========================================
+   5. 3x3 ALIGNMENT GRID & TARGET PIN
+   ========================================== */
 .grid {
-    position: relative; /* CRITICAL: Anchors the absolute positioned dot inside the grid boundary */
+    position: relative; 
     width: 600px;
     height: 600px;
-    border: 3px solid black;
-    margin: 30px auto; /* Centers the actual grid container on the webpage */
+    border: 4px solid black; /* Extra heavy outer border framework */
+    margin: 40px auto;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    background-color: transparent;
 }
 
-/* Target alignment cell blocks */
 .box {
-    border: 1px solid black;
-    background-color: #fff;
-    /* Centers text both vertically and horizontally inside each box */
+    border: 1px solid black; 
+    background-color: transparent;
+    color: black;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
-    font-size: 1.1rem;
-    padding: 10px;
+    padding: 15px;
+    text-align: center;
+    user-select: none;
 }
 
-/* Floating Plot Point */
+.box:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Floating target plot point pin */
 .dot {
     position: absolute;
-    width: 14px; /* Bumped up slightly so it's easier to see against grid borders */
+    width: 14px;
     height: 14px;
     border-radius: 50%;
-    background-color: goldenrod;
-    border: 2px solid white; /* Gives the dot an outline so it pops out */
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+    background-color: goldenrod; /* Provides a clear high-contrast pop against monochrome canvas layout */
+    border: 2px solid black;     /* Changed from white to black for strict cohesive outlining */
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
     display: none;
-    /* CRITICAL: Offsets the dot coordinate alignment so the exact center of the circle sits on the plot point */
     transform: translate(-50%, -50%);
     transition: left 0.4s cubic-bezier(0.25, 1, 0.5, 1), top 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    z-index: 10;
 }
 
-/* Result Box Styles */
+
+/* ==========================================
+   6. OUTPUT RESULTS DISPLAY WINDOW
+   ========================================== */
 #result-container {
     max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-    border: 2px solid #333;
-    border-radius: 8px;
-    background: #fff;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    margin: 30px auto;
+    padding: 24px;
+    background: transparent; /* Changed from white to match transparent container logic */
+    border: 2px solid black;  /* Changed to solid sharp black */
+    border-radius: 0;         /* Removed border radius */
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+    text-align: left;         /* Left-aligned for elegant literary quote style structure */
 }
 
-/* Hide Utility Class
-.hidden-box {
-    display: none;
-} */ 
+#result-title {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid black; /* Decorative underlying axis partition line */
+    padding-bottom: 6px;
+}
+
+#result-text {
+    font-style: italic;
+    color: #222;
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+
