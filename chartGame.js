@@ -10,33 +10,42 @@ window.addEventListener(`DOMContentLoaded`, () => {
     const playerDot = document.querySelector(`.dot`);
     const xSlider = document.querySelector(`.x-slider`);
     const ySlider = document.querySelector(`.y-slider`);
-    
-    // The math logic
+
+    // Convert default scores into padded percentages for dot starting point
     let totalXPoints = idScore + superegoScore;
     let totalYPoints = harmScore + benefitScore;
 
-    // Default points
-    let xScore = totalXPoints === 0 ? 5 : (idScore / totalXPoints) * 10;
-    let yScore = totalYPoints === 0 ? 5 : (benefitScore / totalYPoints) * 10;
+    let xScore = totalXPoints === 0 ? 5 : (idScore / totalXPoints) * 10; // MISSING 'let'
+    let yScore = totalYPoints === 0 ? 5 : (benefitScore / totalYPoints) * 10; // MISSING 'let'
 
-    // Convert default scores into padded percentages for dot starting point
     let initialXPercent = (xScore / 10) * 98 +1;
     let initialYPercent = (yScore / 10) * 98 +1;
+
     playerDot.style.left = `${initialXPercent}%`;
     playerDot.style.top = `${initialYPercent}%`;
 
     // Listen for X-axis changes
     xSlider.addEventListener("input", () => {
-        let currentScore = xSlider.value;
-        let xScore = currentScore;
+        let currentScore = Number(xSlider.value);
+        idScore = currentScore;
+        superegoScore = 10 - currentScore;
+        
+        let totalXPoints = idScore + superegoScore;
+        let xScore = totalXPoints === 0 ? 5 : (idScore / totalXPoints) * 10;
+        
         let xPercentage = (xScore / 10) * 98 + 1;
         playerDot.style.left = `${xPercentage}%`;
     });
 
     // Listen for Y-axis changes
     ySlider.addEventListener("input", () => {
-        let currentScore = ySlider.value;
-        let yScore = currentScore;
+        let currentScore = Number(ySlider.value);
+        benefitScore = currentScore;
+        harmScore = 10 - currentScore;
+        
+        let totalYPoints = harmScore + benefitScore;
+        let yScore = totalYPoints === 0 ? 5 : (benefitScore / totalYPoints) * 10;
+        
         let yPercentage = (yScore / 10) * 98 + 1;
         playerDot.style.top = `${yPercentage}%`;
     });
