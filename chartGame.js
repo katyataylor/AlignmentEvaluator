@@ -1,4 +1,65 @@
 window.addEventListener(`DOMContentLoaded`, () => {
+
+        document.querySelectorAll('.question-box').forEach(box => {
+        const slider = box.querySelector('input[type="range"]');
+        if (!slider) return;
+
+        // Prevent default click highlights or text selections during active dragging
+        box.style.userSelect = 'none';
+
+        function handleInputScaling(e) {
+            // Find the bounding box dimensions of the interactive slider bar
+            const rect = slider.getBoundingClientRect();
+            
+            // Target client horizontal position regardless of desktop mouse or mobile touch input
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            
+            // Calculate the percentage relative to the slider position bounds
+            let percentage = (clientX - rect.left) / rect.width;
+            
+            // Clamp bounds to prevent math errors beyond the 0 to 1 range boundary
+            percentage = Math.max(0, Math.min(1, percentage));
+            
+            // Distribute calculated value across slider attributes min/max map bounds
+            const min = parseFloat(slider.min) || 0;
+            const max = parseFloat(slider.max) || 10;
+            const computedValue = min + percentage * (max - min);
+            
+            // Apply values and fire event updates so your clearDescription rules trigger
+            slider.value = computedValue.toFixed(1);
+            slider.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+
+        // Capture standard container clicks
+        box.addEventListener('mousedown', (e) => {
+            handleInputScaling(e);
+            
+            // Enable drag state tracking anywhere on screen until the cursor releases
+            const trackingMove = (moveEvent) => handleInputScaling(moveEvent);
+            const trackingUp = () => {
+                window.removeEventListener('mousemove', trackingMove);
+                window.removeEventListener('mouseup', trackingUp);
+            };
+            
+            window.addEventListener('mousemove', trackingMove);
+            window.addEventListener('mouseup', trackingUp);
+        });
+
+        // Mirror gestures for mobile screen layouts 
+        box.addEventListener('touchstart', (e) => {
+            handleInputScaling(e);
+            
+            const trackingMove = (moveEvent) => handleInputScaling(moveEvent);
+            const trackingEnd = () => {
+                window.removeEventListener('touchmove', trackingMove);
+                window.removeEventListener('touchend', trackingEnd);
+            };
+            
+            window.addEventListener('touchmove', trackingMove);
+            window.addEventListener('touchend', trackingEnd);
+        }, { passive: true });
+    });
+
   // Radio toggle inputs
   const radioA = document.getElementById("personality");
   const radioB = document.getElementById("action");
