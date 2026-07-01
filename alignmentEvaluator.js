@@ -1,70 +1,107 @@
 window.addEventListener(`DOMContentLoaded`, () => {
 
-     document.querySelectorAll('.question-box').forEach(box => {
-        const slider = box.querySelector('input[type="range"]');
-        if (!slider) return;
+    document.querySelectorAll('.question-box').forEach(box => {
+    const slider = box.querySelector('input[type="range"]');
+    if (!slider) return;
 
-        // Ensure text selection does not happen on mobile during drags
-        box.style.userSelect = 'none';
-        box.style.webkitUserSelect = 'none'; // Critical for Safari iOS
+    box.style.userSelect = 'none';
+    box.style.webkitUserSelect = 'none';
 
-        // Modern interaction states using Pointer Events
-        box.addEventListener('focusin', () => box.classList.add('active-interaction'));
-        box.addEventListener('focusout', () => box.classList.remove('active-interaction'));
+    box.addEventListener('focusin', () => box.classList.add('active-interaction'));
+    box.addEventListener('focusout', () => box.classList.remove('active-interaction'));
 
-        let animationFrameId = null;
+    let animationFrameId = null;
+    let startX = 0;
+    let startY = 0;
+    let isScrollingPage = false;
+    let isTrackingSlider = false;
 
-        function handleInputScaling(e) {
-            // Cancel previous frame to prevent mobile lag
-            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    function handleInputScaling(e) {
+        if (animationFrameId) cancelAnimationFrame(animationFrameId);
 
-            // Debounce calculations to match mobile hardware refresh rate
-            animationFrameId = requestAnimationFrame(() => {
-                const rect = slider.getBoundingClientRect();
-                
-                // clientX works universally across touch and mouse via PointerEvents
-                const clientX = e.clientX;
-                
-                let percentage = (clientX - rect.left) / rect.width;
-                percentage = Math.max(0, Math.min(1, percentage));
-                
-                const min = parseFloat(slider.min) || 0;
-                const max = parseFloat(slider.max) || 10;
-                const computedValue = min + percentage * (max - min);
-                
-                slider.value = computedValue.toFixed(1);
-                slider.dispatchEvent(new Event('input', { bubbles: true }));
-            });
+        animationFrameId = requestAnimationFrame(() => {
+            const rect = slider.getBoundingClientRect();
+            let percentage = (e.clientX - rect.left) / rect.width;
+            percentage = Math.max(0, Math.min(1, percentage));
+            
+            const min = parseFloat(slider.min) || 0;
+            const max = parseFloat(slider.max) || 10;
+            const computedValue = min + percentage * (max - min);
+            
+            slider.value = computedValue.toFixed(1);
+            slider.dispatchEvent(new Event('input', { bubbles: true }));
+        });
+    }
+
+    box.addEventListener('pointerdown', (e) => {
+        // Record the exact point where the user first placed their thumb
+        startX = e.clientX;
+        startY = e.clientY;
+        isScrollingPage = false;
+        isTrackingSlider = false;
+
+        const trackingMove = (moveEvent) => {
+            // If the browser already decided this gesture is a vertical scroll, stop here
+            if (isScrollingPage) return;
+
+            // If we haven't locked onto an action yet, calculate the gesture direction
+            if (!isTrackingSlider) {
+                const deltaX = Math.abs(moveEvent.clientX - startX);
+                const deltaY = Math.abs(moveEvent.clientY - startY);
+
+                // If the movement is primarily vertical, lock this gesture to page scrolling
+                if (deltaY > deltaX && deltaY > 8) {
+                    isScrollingPage = true;
+                    cleanup();
+                    return;
+                }
+
+                // If movement is primarily horizontal, lock onto the slider
+                if (deltaX > 8) {
+                    isTrackingSlider = true;
+                    box.classList.add('active-interaction');
+                    box.setPointerCapture(e.pointerId);
+                }
+            }
+
+            // Only update slider values if horizontal intent is locked in
+            if (isTrackingSlider) {
+                handleInputScaling(moveEvent);
+            }
+        };
+
+        const trackingUp = (upEvent) => {
+            // Auto-scroll to next container smoothly after user finishes a drag adjustment
+            if (isTrackingSlider) {
+                const nextBox = box.nextElementSibling;
+                if (nextBox && nextBox.classList.contains('question-box')) {
+                    setTimeout(() => {
+                        nextBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 300); // 300ms pause gives visual breathing room
+                }
+            }
+
+            if (isTrackingSlider) {
+                box.releasePointerCapture(upEvent.pointerId);
+            }
+            if (document.activeElement !== slider) {
+                box.classList.remove('active-interaction');
+            }
+            cleanup();
+        };
+
+        function cleanup() {
+            box.removeEventListener('pointermove', trackingMove);
+            box.removeEventListener('pointerup', trackingUp);
+            box.removeEventListener('pointercancel', trackingUp);
         }
 
-        // Single event listener captures both desktop mouse and mobile touch thumbs
-        box.addEventListener('pointerdown', (e) => {
-            box.classList.add('active-interaction');
-            
-            // Forces mobile browsers to track this specific thumb input outside the box
-            box.setPointerCapture(e.pointerId);
-            
-            handleInputScaling(e);
-
-            const trackingMove = (moveEvent) => handleInputScaling(moveEvent);
-            
-            const trackingUp = (upEvent) => {
-                box.releasePointerCapture(upEvent.pointerId);
-                
-                if (document.activeElement !== slider) {
-                    box.classList.remove('active-interaction');
-                }
-                
-                box.removeEventListener('pointermove', trackingMove);
-                box.removeEventListener('pointerup', trackingUp);
-                box.removeEventListener('pointercancel', trackingUp);
-            };
-            
-            box.addEventListener('pointermove', trackingMove);
-            box.addEventListener('pointerup', trackingUp);
-            box.addEventListener('pointercancel', trackingUp); // Handles interruptions like incoming phone calls
-        });
+        box.addEventListener('pointermove', trackingMove);
+        box.addEventListener('pointerup', trackingUp);
+        box.addEventListener('pointercancel', trackingUp);
     });
+});
+
 
   // Radio toggle inputs
   const radioA = document.getElementById("personality");
