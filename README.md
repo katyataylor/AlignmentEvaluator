@@ -15,7 +15,7 @@ neutral = (id === superego)
 
 The Y-Axis (Evil - Good)
 
-Good and evil in this case are determined by impact on others. Altruism and looking out for others is generally cnsidered "good" and is a useful concept for this case. Self-interest at the expense of others is considered "evil". 
+Good and evil in this case are determined by impact on others. Altruism and looking out for others is generally considered "good" and is a useful concept for this case. Self-interest at the expense of others is considered "evil". 
 Simply put,
 
 good = (benefit > harm)  
